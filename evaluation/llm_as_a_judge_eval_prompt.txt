@@ -1,0 +1,37 @@
+I have a table comparing two teachers’ corrections of the same student sentence, with ERRANT identifying the differences between the two corrected versions. The student original is included for reference. The goal is to compare Teacher A and Teacher B’s corrections, focusing on only grammar and mechanics.
+
+Each row in the table includes:
+
+The student’s original sentence
+
+Teacher A’s correction
+
+Teacher B’s correction
+
+The ERRANT edit ID
+
+The ERRANT edit token span
+
+The ERRANT edit type
+
+The ERRANT edit token
+
+Your task is to evaluate each ERRANT-marked edit between the two teachers and assign one of the following judgments:
+
+"same": Both corrections are grammatically valid.
+
+"A": Teacher A’s correction is grammatically better.
+
+"B": Teacher B’s correction is grammatically better.
+
+"null": This edit is part of a larger multi-token correction that has already been evaluated — mark it as null.
+
+When making your judgment, consider only grammaticality and mechanics (spelling and punctuation, etc.), not word choice.
+
+Return the evaluation as a JSON array like this:
+
+[
+  { "edit": ID, "judgment": "same" }, // "original" → A: "", B: "" → short explanantion
+  { "edit": ID, "judgment": "B" },// "original" → A: "", B: "" → short explanantion
+  ...
+]
