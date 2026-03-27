@@ -1,0 +1,26 @@
+import os
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+from lib.utils import setup_log
+from lib.model_runner import ModelRunner
+import settings
+
+skip_if_exist = True
+skip_if_exist = False
+run_top_k = -1
+# run_top_k = 5
+
+def main():
+    os.makedirs("../results", exist_ok=True)
+    
+    runner = ModelRunner(settings, run_top_k=run_top_k)
+    runner.run(
+        baseline=False,
+        fine_tuned=True,
+        skip_if_exists=skip_if_exist
+    )
+
+
+if __name__ == "__main__":
+    setup_log()
+    main()

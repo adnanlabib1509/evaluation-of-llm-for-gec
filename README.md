@@ -22,6 +22,7 @@ The BEA 2019 dataset contains English essays written by non-native ESL students 
 
 ### LLaMA 3.3 Fine-tuning
 - **Method:** LoRA via PEFT library
+- **Model:** Fine-tuned LLaMA 3.3 70B ([judywq/llama-ft-gec](https://huggingface.co/judywq/llama-ft-gec))
 - **Hyperparameters:**
   - Rank: 8
   - Alpha: 16
@@ -38,14 +39,34 @@ The BEA 2019 dataset contains English essays written by non-native ESL students 
 
 ```
 AIED_Code/
-├── dataset/                    # Dataset processing scripts
-├── training_scripts/           # Model fine-tuning scripts (GPT-4o, LLaMA)
-├── inference_scripts/          # Model inference scripts for generating corrections
+├── dataset/                    # Dataset processing and raw data files
+│   ├── training_dataset/       # ABC training data (original/corrected)
+│   ├── testing_datasets/       # BEA and CoNLL test data
+│   ├── bea_dataset_builder.py  # Convert BEA M2 to text format
+│   └── conll_dataset_builder.py # Convert CoNLL M2 to text format
+├── training_scripts/           # Model fine-tuning scripts
+│   ├── A01_gpt_prepare_dataset.py  # Prepare JSONL for GPT fine-tuning
+│   ├── A02_gpt_finetune.py         # Fine-tune GPT-4o via OpenAI API
+│   ├── B01_prepare_dataset.py      # Create HuggingFace dataset
+│   └── E01_llama_finetune.py       # Fine-tune Llama with LoRA
+├── inference_scripts/          # Model inference and result formatting
+│   ├── A03_gpt_inference.py        # Run GPT-4o inference
+│   ├── A04_gpt_format_output.py    # Convert JSONL results to Excel
+│   ├── C01_inference_parrallel.py  # Generic parallel inference (LiteLLM)
+│   ├── D01_prepare_openai_batch.py # Prepare OpenAI batch jobs
+│   ├── D02_run_openai_batch.py     # Run OpenAI batch processing
+│   └── E02_llama_inference.py      # Run Llama inference
 ├── ensemble_scripts/           # Ensemble selection methods
 ├── error_type_analysis/        # Error type analysis using ERRANT
 ├── evaluation/                 # Automated metrics calculation
 ├── confidence_scores/          # Statistical significance testing
-└── results/                    # Output files (bea_outputs.xlsx, conll_outputs.xlsx)
+├── lib/                        # Shared utilities and helper classes
+│   ├── settings.py             # Configuration (paths, models, prompts)
+│   ├── dataset_preparation.py  # Dataset preparation logic
+│   ├── finetuning_helper.py    # OpenAI fine-tuning helper
+│   ├── model_runner.py         # Model inference runner
+│   └── data_formatter.py       # Result formatting to Excel
+└── results/                    # Output files (JSONL, Excel, job metadata)
 ```
 
 ## Quick Start
@@ -60,20 +81,32 @@ python conll_dataset_builder.py  # Convert CoNLL M2 to text
 ### 2. Fine-tune Models
 ```bash
 cd training_scripts
-# Fine-tune GPT-4o (via OpenAI API)
-python train_gpt4o.py --epochs 2 --train_file ../dataset/training_dataset/ABC_train.jsonl
 
-# Fine-tune LLaMA 3.3 (with LoRA)
-python train_llama.py --rank 8 --alpha 16 --lr 2e-5 --epochs 2 --batch_size 32
+# Prepare datasets (train/val/test JSONL files)
+python A01_gpt_prepare_dataset.py
+
+# Fine-tune GPT-4o via OpenAI API
+python A02_gpt_finetune.py
+
+# Fine-tune LLaMA 3.3 with LoRA
+python E01_llama_finetune.py
 ```
 
 ### 3. Run Inference
 ```bash
 cd inference_scripts
-# Generate corrections with fine-tuned models
-python inference_gpt4o.py --input ../results/bea_outputs.xlsx --output_column gpt4o_ft_corrected
-python inference_llama.py --input ../results/bea_outputs.xlsx --output_column llama_ft_corrected
-python inference_deepseek.py --input ../results/bea_outputs.xlsx --output_column deepseek_corrected
+
+# Run GPT-4o fine-tuned model inference
+python A03_gpt_inference.py
+
+# Run Llama fine-tuned model inference
+python E02_llama_inference.py
+
+# Run parallel inference with any model (via LiteLLM)
+python C01_inference_parrallel.py --model openai/gpt-4o-mini
+
+# Format results to Excel
+python A04_gpt_format_output.py
 ```
 
 ### 4. Run Ensemble Methods
