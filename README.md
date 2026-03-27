@@ -156,15 +156,6 @@ python calculate_rates.py     # Calculate correction/false insertion rates
 python calculate_correlation.py  # Analyze model correlations
 ```
 
-## Requirements
-
-See [requirements.txt](requirements.txt) for a complete list of dependencies.
-
-Install all dependencies with:
-```bash
-pip install -r requirements.txt
-```
-
 ## Citation
 
 If you use this code, please cite our paper:
