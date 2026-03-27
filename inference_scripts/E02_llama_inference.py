@@ -13,6 +13,12 @@ Writes one JSON array per line to match the parallel inference scripts:
   {"choices": [{"message": {"content": "..."}}], "model": "..."},
   {...metadata...}
 ]
+
+IMPORTANT: This script requires a HuggingFace token with access to Llama models.
+Set up authentication before running:
+  export HF_TOKEN="your-huggingface-token-here"
+Or login via:
+  huggingface-cli login
 """
 
 from __future__ import annotations

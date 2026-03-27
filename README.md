@@ -71,6 +71,26 @@ AIED_Code/
 
 ## Quick Start
 
+### 0. Setup Environment
+
+#### Install Dependencies
+```bash
+pip install -r requirements.txt
+```
+
+#### Set up API Keys
+For OpenAI fine-tuning and inference, set your OpenAI API key:
+```bash
+export OPENAI_API_KEY="your-openai-api-key-here"
+```
+
+For LLaMA fine-tuning, you need a HuggingFace token with access to the Llama models:
+```bash
+export HF_TOKEN="your-huggingface-token-here"
+# Or login via CLI
+huggingface-cli login
+```
+
 ### 1. Process Datasets
 ```bash
 cd dataset
@@ -96,14 +116,11 @@ python E01_llama_finetune.py
 ```bash
 cd inference_scripts
 
-# Run GPT-4o fine-tuned model inference
+# Run GPT-4o fine-tuned model inference (requires OPENAI_API_KEY)
 python A03_gpt_inference.py
 
-# Run Llama fine-tuned model inference
+# Run Llama fine-tuned model inference (requires HF_TOKEN)
 python E02_llama_inference.py
-
-# Run parallel inference with any model (via LiteLLM)
-python C01_inference_parrallel.py --model openai/gpt-4o-mini
 
 # Format results to Excel
 python A04_gpt_format_output.py
@@ -141,13 +158,11 @@ python calculate_correlation.py  # Analyze model correlations
 
 ## Requirements
 
-```bash
-pip install pandas torch transformers gec_metrics errant nltk tqdm openpyxl scipy numpy
-```
+See [requirements.txt](requirements.txt) for a complete list of dependencies.
 
-For GPU acceleration (recommended for ensemble methods):
+Install all dependencies with:
 ```bash
-pip install bitsandbytes accelerate peft
+pip install -r requirements.txt
 ```
 
 ## Citation

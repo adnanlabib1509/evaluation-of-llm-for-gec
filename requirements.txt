@@ -1,0 +1,31 @@
+# Core dependencies
+pandas
+torch
+transformers
+datasets
+gec_metrics
+errant
+nltk
+tqdm
+openpyxl
+scipy
+numpy
+
+# OpenAI API
+openai
+
+# For parallel inference
+aiohttp
+tiktoken
+litellm
+
+# PEFT for LoRA fine-tuning
+peft
+trl
+accelerate
+
+# Optional: For 4-bit quantization (QLoRA)
+bitsandbytes
+
+# Spacy for NLP tasks
+spacy
